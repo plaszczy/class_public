@@ -1,0 +1,36 @@
+package class
+
+#on rajoute les flags qu'on veut au compilateur: pou deubgger on met en general -g mais pour 
+#tourner optimisez avec -O2- pour le compilateur par d�faut la parall�lisation est active par 
+#-fopenmp 
+macro_append cflags  " -DHYREC "
+
+macro_append cflags  " -g -O3 -fopenmp"
+macro_append clinkflags  " -g -fopenmp"
+
+
+#on specifie ou se trouvent les fichier d'include.
+include_dirs "$(CLASSROOT)/include"
+include_dirs "$(CLASSROOT)/hyrec"
+
+#creation d'une librarire non partagee a partir de tous les .c de src/ et 
+#tools/, #en excluant le fichier trg.c
+library Class -no_share ../source/*.c ../tools/*.c ../hyrec/*.c
+
+#il faut linker tous les executables a cette librarie et a la libraire de math
+# (-lm) et remettre le flag openmp
+macro class_stamps $(CLASSROOT)/$(CMTCONFIG)/Class.stamp
+macro_append class_linkopts " -L$(CLASSROOT)/${CMTCONFIG} -lClass -lm"
+
+#applications
+macro application_suffix ""
+
+application class -s=../main class.c
+
+# dependance a la librairies
+macro_append class_dependencies "Class"
+
+#on peut faire des tests avec d'autres executables .
+# on va les mettre dausn un groupe "test" 
+#qu'on appelle alors par "make test"
+application test_loop -group=test ../test/test_loops.c
