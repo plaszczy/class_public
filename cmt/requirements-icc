@@ -1,4 +1,4 @@
-package class_plaszczy
+package class
 
 #redfeine compilo
 macro cc "icc"
