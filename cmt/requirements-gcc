@@ -5,8 +5,8 @@ package class
 #-fopenmp 
 macro_append cflags  " -DHYREC "
 
-macro_append cflags  " -g -O3 -fopenmp"
-macro_append clinkflags  " -g -fopenmp"
+macro_append cflags  " -g -O3 -fPIC -fopenmp"
+macro_append clinkflags  " -g -fPIC -fopenmp"
 
 
 #on specifie ou se trouvent les fichier d'include.
