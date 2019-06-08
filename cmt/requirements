@@ -1,0 +1,43 @@
+package class
+
+#conditionaly redefine compiler 
+macro cc "gcc" \
+      CCIN2P3 "icc"
+
+#optimized set of flags
+macro_append cflags "-O3 -fPIC -fopenmp" \
+      CCIN2P3 " -O3 -no-prec-div -fp-model fast=2 -qopenmp "
+
+macro_append clinkflags  " -fPIC -fopenmp"\
+      CCIN2P3 ""
+
+macro_append cflags  " -DHYREC "
+
+#on specifie ou se trouvent les fichier d'include.
+include_dirs "$(CLASSROOT)/include"
+include_dirs "$(CLASSROOT)/hyrec"
+
+#creation d'une librarire non partagee a partir de tous les .c de src/ et 
+#tools/, #en excluant le fichier trg.c
+library Class -no_share ../source/*.c ../tools/*.c ../hyrec/*.c
+
+#il faut linker tous les executables a cette librarie et a la libraire de math
+# (-lm) et remettre le flag openmp
+macro class_stamps $(CLASSROOT)/$(CMTCONFIG)/Class.stamp
+
+macro_append class_linkopts " -L$(CLASSROOT)/${CMTCONFIG} -lClass"
+macro_append class_linkopts " -lm" \
+      CCIN2P3  "-liomp5"
+
+#applications
+macro application_suffix ""
+
+application class -s=../main class.c
+
+# dependance a la librairies
+macro_append class_dependencies "Class"
+
+#on peut faire des tests avec d'autres executables .
+# on va les mettre dausn un groupe "test" 
+#qu'on appelle alors par "make test"
+application test_loop -group=test ../test/test_loops.c
