@@ -25,7 +25,7 @@ library Class -no_share ../source/*.c ../tools/*.c ../hyrec/*.c
 # (-lm) et remettre le flag openmp
 macro class_stamps $(CLASSROOT)/$(CMTCONFIG)/Class.stamp
 
-macro_append class_linkopts " -L$(CLASSROOT)/${CMTCONFIG} -lClass"
+macro_append class_linkopts " -L$(CLASSROOT)/${CMTCONFIG} -lClass "
 macro_append class_linkopts " -lm" \
       CCIN2P3  "-liomp5"
 
